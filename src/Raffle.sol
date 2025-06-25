@@ -17,7 +17,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     error Raffle__SendMoreToEnterRaffle();
     error Raffle__TransferFailed();
     error Raffle__RaffleNotOpen();
-    error Raffle__UpKeepNotNeed(uint256 walletBalance, uint256 numberOfPlayers, uint256 raffleState);
+    error Raffle__UpKeepNotNeeded(uint256 walletBalance, uint256 numberOfPlayers, uint256 raffleState);
 
     /** Type declarations */
     enum RaffleState {
@@ -105,7 +105,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         // check to see if the time has passed
         (bool upkeepNeeded, ) = checkUpkeep("");
         if(!upkeepNeeded) {
-            revert Raffle__UpKeepNotNeed(address(this).balance, s_players.length, uint256(s_raffleState));
+            revert Raffle__UpKeepNotNeeded(address(this).balance, s_players.length, uint256(s_raffleState));
         }
 
         s_raffleState = RaffleState.CALCULATING;
