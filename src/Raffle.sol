@@ -43,6 +43,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
      */
     event WinnerPicked(address indexed recentWinner);
     event RaffleEntered(address indexed player); // indexed is a keyword in Solidity, and it's used in event declarations to make up to three parameters searchable/filterable in the blockchain logs
+    event RequestedRaffleWinner(uint256 indexed requestId);
 
     constructor(
         uint256 entranceFee,
@@ -121,7 +122,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
                 VRFV2PlusClient.ExtraArgsV1({nativePayment: false})
             )
         });
-        s_vrfCoordinator.requestRandomWords(request);
+        uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+
+        emit RequestedRaffleWinner(requestId);
     }
 
     function fulfillRandomWords(uint256 /** requestId */, uint256[] calldata randomWords) internal override {
