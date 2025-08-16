@@ -1,5 +1,5 @@
 
-````
+
 # 🎟️ Chainlink VRF Raffle – Foundry Smart Contract Project
 
 A decentralized **Raffle (lottery)** smart contract built in **Solidity (0.8.19)** and powered by **Chainlink VRF v2+** to ensure verifiable on-chain randomness.  
