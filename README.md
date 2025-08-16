@@ -1,66 +1,100 @@
-## Foundry
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+````
+# 🎟️ Chainlink VRF Raffle – Foundry Smart Contract Project
 
-Foundry consists of:
+A decentralized **Raffle (lottery)** smart contract built in **Solidity (0.8.19)** and powered by **Chainlink VRF v2+** to ensure verifiable on-chain randomness.  
+The project uses the **Foundry** toolchain for rapid development, testing, and deployment.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+---
 
-## Documentation
+## 💡 Features
 
-https://book.getfoundry.sh/
+- Anyone can enter the raffle by sending ETH using `enterRaffle()`
+- Uses **Chainlink Automation (Keepers)** for autonomous winner selection
+- Integrates **Chainlink VRF** for secure, tamper-proof random number generation
+- Automatically transfers accumulated ETH balance to the selected winner
+- Implements the Solidity CEI pattern (Checks → Effects → Interactions) for safe design
 
-## Usage
+---
 
-### Build
+## 🛠️ Tech Stack
 
-```shell
-$ forge build
+| Layer      | Tools / Services                          |
+|-----------|--------------------------------------------|
+| Language   | Solidity `^0.8.19`                         |
+| Framework  | Foundry (`forge`, `cast`, `anvil`)         |
+| Randomness | Chainlink VRF v2+                          |
+| Automation | Chainlink Keepers                          |
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone & Install Foundry
+
+```bash
+git clone <repo-url>
+cd <project>
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+forge --version
+````
+
+### 2️⃣ Install Dependencies
+
+```bash
+forge install
 ```
 
-### Test
+### 3️⃣ Configure Environment
 
-```shell
-$ forge test
+Create a `.env` file:
+
+```dotenv
+PRIVATE_KEY=0xabc123...
+SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/...
+ETHERSCAN_API_KEY=XYZ
+CHAINLINK_SUBSCRIPTION_ID=1234
+VRF_COORDINATOR=0x...
+GAS_LANE=0x...                     # keyHash
+CALLBACK_GAS_LIMIT=500000
+INTERVAL=300                       # seconds
+ENTRANCE_FEE=10000000000000000     # 0.01 ETH
 ```
 
-### Format
+### 4️⃣ Deploy to Sepolia
 
-```shell
-$ forge fmt
+```bash
+forge script script/Deploy.s.sol \
+  --rpc-url $SEPOLIA_RPC_URL \
+  --broadcast \
+  --verify
 ```
 
-### Gas Snapshots
+### 5️⃣ Enter the Raffle
 
-```shell
-$ forge snapshot
+```bash
+cast send <raffle_contract_address> \
+  "enterRaffle()" \
+  --value 0.01ether \
+  --private-key $PRIVATE_KEY \
+  --rpc-url $SEPOLIA_RPC_URL
 ```
 
-### Anvil
+---
 
-```shell
-$ anvil
-```
+## 📄 Contract Overview
 
-### Deploy
+| Function               | Description                                                   |
+| ---------------------- | ------------------------------------------------------------- |
+| `enterRaffle()`        | Allows a user to enter the raffle by sending ETH              |
+| `checkUpkeep()`        | Keeper check to determine if a draw should run                |
+| `performUpkeep()`      | Requests a random number from Chainlink VRF                   |
+| `fulfillRandomWords()` | Chainlink callback → selects a winner & transfers the balance |
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+---
 
-### Cast
+## ✍️ Author
 
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+**Ebenezer Igbinoba**
+[https://github.com/eben4real](https://github.com/eben4real)
